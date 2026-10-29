@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>سيمو كورة - Simo Kora</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #131b2e;
+            --bg-glass: rgba(19, 27, 46, 0.7);
+            --primary: #00ff88;
+            --accent: #ff0055;
+            --gold: #ffd700;
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
+        body { background-color: var(--bg-main); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        
+        .ticker-wrap { background: linear-gradient(90deg, #ff0055, #7000ff); color: white; padding: 10px 0; overflow: hidden; white-space: nowrap; position: relative; box-shadow: 0 4px 15px rgba(255,0,85,0.3); }
+        .ticker { display: inline-block; animation: ticker 25s linear infinite; font-weight: 700; font-size: 0.95rem; }
+        .ticker span { margin-left: 50px; display: inline-flex; align-items: center; gap: 8px; }
+        .ticker span i { color: var(--gold); }
+        @keyframes ticker { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-50%, 0, 0); } }
+
+        header { background: var(--bg-card); padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+        .logo { display: flex; align-items: center; gap: 10px; font-size: 1.4rem; font-weight: 900; color: var(--primary); text-shadow: 0 0 10px rgba(0,255,136,0.4); }
+        .logo i { color: var(--gold); font-size: 1.6rem; }
+        .live-badge { background: var(--accent); color: white; padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; animation: pulse 1.5s infinite; display: flex; align-items: center; gap: 5px; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        .clubs-container { display: flex; gap: 12px; padding: 15px 20px; overflow-x: auto; background: rgba(11, 15, 25, 0.95); scrollbar-width: none; border-bottom: 1px solid var(--border); }
+        .clubs-container::-webkit-scrollbar { display: none; }
+        .club-btn { background: var(--bg-card); border: 2px solid var(--border); border-radius: 15px; padding: 10px 18px; color: var(--text-main); font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.3s ease; white-space: nowrap; flex-shrink: 0; }
+        .club-btn img { width: 28px; height: 28px; object-fit: contain; }
+        .club-btn.active, .club-btn:hover { border-color: var(--primary); background: rgba(0, 255, 136, 0.1); transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,255,136,0.2); }
+
+        .container { max-width: 1200px; margin: 20px auto; padding: 0 15px; width: 100%; flex: 1; }
+        
+        .club-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 10px; overflow-x: auto; }
+        .tab-btn { background: none; border: none; color: var(--text-muted); font-size: 1rem; font-weight: 700; padding: 8px 16px; cursor: pointer; border-radius: 8px; transition: 0.3s; white-space: nowrap; }
+        .tab-btn.active { color: var(--primary); background: rgba(0,255,136,0.1); }
+
+        .tab-content { display: none; animation: fadeIn 0.4s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px; margin-bottom: 25px; }
+        .news-card { background: var(--bg-card); border-radius: 14px; overflow: hidden; border: 1px solid var(--border); transition: 0.3s; cursor: pointer; display: flex; flex-direction: column; }
+        .news-card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .news-img { width: 100%; height: 160px; object-fit: cover; }
+        .news-body { padding: 15px; }
+        .news-time { font-size: 0.75rem; color: var(--accent); margin-bottom: 6px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+        .news-title { font-size: 1rem; font-weight: 700; line-height: 1.4; }
+
+        .players-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+        .player-card { background: linear-gradient(135deg, #1a233a, #0f172a); border: 2px solid var(--gold); border-radius: 16px; padding: 15px 10px; text-align: center; position: relative; box-shadow: 0 8px 20px rgba(0,0,0,0.4); transition: 0.3s; }
+        .player-card:hover { transform: scale(1.05); }
+        .player-img-box { width: 80px; height: 80px; margin: 0 auto 10px; border-radius: 50%; overflow: hidden; border: 2px solid var(--gold); background: #000; }
+        .player-img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .player-num { position: absolute; top: 10px; right: 12px; font-weight: 900; color: var(--gold); font-size: 0.9rem; }
+        .player-pos { position: absolute; top: 10px; left: 12px; font-weight: 700; color: var(--primary); font-size: 0.75rem; background: rgba(0,255,136,0.1); padding: 2px 6px; border-radius: 4px; }
+        .player-name { font-size: 0.95rem; font-weight: 700; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .player-stats { display: flex; justify-content: space-around; font-size: 0.75rem; color: var(--text-muted); border-top: 1px solid var(--border); padding-top: 8px; margin-top: 5px; }
+
+        .match-card { background: var(--bg-card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        .match-teams { font-weight: 700; font-size: 1rem; display: flex; align-items: center; gap: 12px; }
+        .match-score { background: var(--accent); color: white; padding: 6px 14px; border-radius: 8px; font-weight: 900; font-size: 1.1rem; }
+        
+        .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+        
+        footer { text-align: center; padding: 20px; background: var(--bg-card); border-top: 1px solid var(--border); color: var(--text-muted); font-size: 0.85rem; margin-top: auto; }
+    </style>
+</head>
+<body>
+
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span><i class="fas fa-bolt"></i> عاجل: انطلاق منافسات بطولة سيمو كورة الرياضية</span>
+            <span><i class="fas fa-trophy"></i> صراع اشتعل على صدارة جدول الترتيب</span>
+            <span><i class="fas fa-star"></i> تغطية حصرية ومباشرة لأبرز المباريات والنجوم</span>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo">
+            <i class="fas fa-futbol"></i> سيمو كورة
+        </div>
+        <div class="live-badge">
+            <i class="fas fa-circle"></i> بث مباشر
+        </div>
+    </header>
+
+    <div class="clubs-container">
+        <button class="club-btn active" onclick="switchClub('ahly')">
+            <i class="fas fa-shield-alt" style="color: #ef4444;"></i> الأهلي
+        </button>
+        <button class="club-btn" onclick="switchClub('zamalek')">
+            <i class="fas fa-shield-alt" style="color: #3b82f6;"></i> الزمالك
+        </button>
+        <button class="club-btn" onclick="switchClub('pyramids')">
+            <i class="fas fa-shield-alt" style="color: #6366f1;"></i> بيراميدز
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="club-tabs">
+            <button class="tab-btn active" onclick="switchTab('news', this)">الأخبار</button>
+            <button class="tab-btn" onclick="switchTab('matches', this)">المباريات</button>
+            <button class="tab-btn" onclick="switchTab('players', this)">النجوم</button>
+        </div>
+
+        <div id="news" class="tab-content active">
+            <div class="news-grid">
+                <div class="news-card">
+                    <div class="news-body">
+                        <div class="news-time"><i class="far fa-clock"></i> منذ ساعة</div>
+                        <div class="news-title">استعدادات مكثفة وتحضيرات قوية لمواجهات الجولة القادمة في البطولات المحلية والقارية.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="matches" class="tab-content">
+            <div class="match-card">
+                <div class="match-teams">
+                    <span>الأهلي</span>
+                    <span class="match-score">VS</span>
+                    <span>الزمالك</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="players" class="tab-content">
+            <div class="players-grid">
+                <div class="player-card">
+                    <div class="player-num">#10</div>
+                    <div class="player-pos">هجوم</div>
+                    <div class="player-name">نجم الفريق</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>جميع الحقوق محفوظة © سيمو كورة 2026</p>
+    </footer>
+
+    <script>
+        function switchClub(club) {
+            document.querySelectorAll('.club-btn').forEach(btn => btn.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+        function switchTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+</body>
+</html>
